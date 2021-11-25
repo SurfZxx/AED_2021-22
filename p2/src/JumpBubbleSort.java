@@ -13,13 +13,28 @@ public class JumpBubbleSort {
     resutltado final = {9 8 7 6 5 4 3 2 1 0} 
     */
 
+    
 
+    public static void sort(int[] array) {
+        int temp = 0;
+        int dist = array.length-1;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < array[i-1]) {
+                temp = array[i-1];
+                array[i-1] = array[i];
+                array[i] = temp;
+            }
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int[] array = new int[];
-        while()
-        System.out.println("merda");
-
+        int[] array = {6,5,9,2,4,7,1,8,3};
+        int indice = 0;
+        // while (scanner.hasNext()) {
+        //     array[indice] = scanner.nextInt();
+        //     indice++;
+        // }
+        sort(array);
     }
 }
