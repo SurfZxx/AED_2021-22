@@ -1,18 +1,7 @@
 import java.util.*;
-//package aed.sorting;
+package aed.sorting;
 
-public class JumpBubbleSort{
-
-    /*
-    0 2 1 3 6 4 5 8 7 9 -> maior elemento passa para topo
-    9 0 2 1 3 6 4 5 8 7 -> corta o primeiro elemento
-    0 2 1 3 6 4 5 8 7 -> maior elemento passa para o topo
-    8 0 2 1 3 6 4 5 7 -> corta o primeiro elemento
-    0 2 1 3 6 4 5 7 -> maior elemento passa para topo
-    7 0 2 1 3 6 4 5 -> corta o primeiro elemento
-    0 2 1 3 6 4 5 -> repetir ate ultimo elemento ser cortado
-    resutltado final = {9 8 7 6 5 4 3 2 1 0} 
-    */
+public class JumpBubbleSort extends Sort {
 
 
 
@@ -41,6 +30,12 @@ public class JumpBubbleSort{
         a[j] = t;
     }
 
+    public static boolean isSorted(Comparable[] a) {
+        for (int i = 1; i < a.length; i++) {
+            if (less(a[i], a[i-1])) return false;
+        }
+    }
+
     public static <T extends  Comparable<T>> void sort(T[] array) {
         int n = array.length;
         int d=n-1;
@@ -59,16 +54,24 @@ public class JumpBubbleSort{
     }
 
     public static void main(String[] args) {
-        //Scanner scanner = new Scanner(System.in);
-        //Integer[] array = {6,5,9,2,4,7,1,8,3};
-        Integer[] array = {9,8,7,6,5,4,3,2,1};
-        //int indice = 0;
+        Scanner scanner = new Scanner(System.in);
+
+        //Integer[] array = {1,2,3,4,5,6,7,8,9}; funciona
+        //Integer[] array = {6,5,9,2,4,7,1,8,3}; funciona
+        // Integer[] array = {9,8,7,6,5,4,3,2,1}; funciona
+        //Integer[] array = {6,2,3,4,1,7,8,9}; nao funciona
+
+        Integer[] array = new Integer[9];
+        for (int i = 0; i < 9; i++) {
+            array[i] = scanner.nextInt();
+        }
+        // int indice = 0;
         // while (scanner.hasNext()) {
         //     array[indice] = scanner.nextInt();
         //     indice++;
         // }
         sort(array);
         System.out.println(Arrays.toString(array));
-        //scanner.close();
+        scanner.close();
     }
 }
