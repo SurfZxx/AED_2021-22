@@ -60,7 +60,8 @@ public class JumpBubbleSort{
 
     public static void main(String[] args) {
         //Scanner scanner = new Scanner(System.in);
-        Integer[] array = {6,5,9,2,4,7,1,8,3};
+        //Integer[] array = {6,5,9,2,4,7,1,8,3};
+        Integer[] array = {9,8,7,6,5,4,3,2,1};
         //int indice = 0;
         // while (scanner.hasNext()) {
         //     array[indice] = scanner.nextInt();
