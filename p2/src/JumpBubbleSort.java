@@ -1,4 +1,4 @@
-package aed.sorting;
+//package aed.sorting;
 import java.util.*;
 public class JumpBubbleSort extends Sort {
 
