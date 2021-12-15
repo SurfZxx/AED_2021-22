@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class Treap<Key extends Comparable<Key>,Value> {
 
+    private Node root;
+
     private class Node {
         private Key key;
          private int priority;
@@ -12,11 +14,11 @@ public class Treap<Key extends Comparable<Key>,Value> {
         private Node right;
         private int size;
 
-        public Node(Key key, Value value, int size, int priority) {
+        public Node(Key key, Value value, int size) {
             this.key = key;
             this.value = value;
             this.size = size;
-            this.priority = priority;
+            //this.priority = priority;
         }
 
         public String toString() {
@@ -25,22 +27,6 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
     }
 
-    public Treap<Key,Value> shallowCopy() {
-        Treap<Key,Value> copy = new Treap<>();
-        copy.root = copy(copy.root);
-
-        Node left = null;
-        Node right = null;
-        if (this.left != null) {
-            left = this.left.shallowCopy();
-            // copy.put(this.key, this.value);
-        }
-        if (this.right != null) {
-            right = this.right.shallowCopy();
-            // copy.put(this.key, this.value);
-        }
-        // return Node(this.key, this.value, left, right);
-    }
 
     public Treap()  {
         //TODO: implement
@@ -50,14 +36,34 @@ public class Treap<Key extends Comparable<Key>,Value> {
         //TODO: implement
     }
 
-    public int size()   {
-        //TODO: implement
-        return 0;
+    public int size() {
+        return size(this.root);
+    }
+
+    public int size(Node n)   {
+        if (n == null) {
+            return 0;
+        } else {
+            return n.size;
+        }
     }
 
     public Value get(Key k)   {
-        //TODO: implement
-        return null;
+        return get(this.root, k);
+    }
+
+    private Value get(Node n, Key k) {
+        if (n == null) {
+            return null;
+        }
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            return get(n.left,k);
+        } else if (cmp > 0) {
+            return get(n.right,k);
+        } else {
+            return n.value;
+        }
     }
 
     public boolean containsKey(Key k)   {
@@ -66,7 +72,25 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public void put(Key k, Value v) {
-        //TODO: implement
+        this.root = put(this.root, k,v);
+    }
+
+    private Node put(Node n, Key k, Value v) {
+        if (n == null) {
+            return new Node(k,v,1);
+        }
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            n.left = put(n.left, k, v);
+        } else if (cmp > 0) {
+            n.right = put(n.right, k, v);
+        } else {
+            n.value = v;
+        }
+
+        //update the node size
+        n.size = size(n.left) + size(n.right) +1;
+        return n;
     }
     
     public void delete(Key k)   {
@@ -130,6 +154,23 @@ public class Treap<Key extends Comparable<Key>,Value> {
     public Iterable<Key> keys(Key min, Key max)   {
         //TODO: implement
         return null;
+    }
+
+    public Treap<Key,Value> shallowCopy() {
+        Treap<Key,Value> copy = new Treap<>();
+        copy.root = copy(copy.root);
+
+        Node left = null;
+        Node right = null;
+        if (this.left != null) {
+            left = this.left.shallowCopy();
+            // copy.put(this.key, this.value);
+        }
+        if (this.right != null) {
+            right = this.right.shallowCopy();
+            // copy.put(this.key, this.value);
+        }
+        // return Node(this.key, this.value, left, right);
     }
 
     //helper method that uses the treap to build an array with a heap structure
