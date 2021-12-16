@@ -14,9 +14,9 @@ public class Treap<Key extends Comparable<Key>,Value> {
         private Node right;
         private int size;
 
-        public Node(Key key, Value value, int size) {
-            this.key = key;
-            this.value = value;
+        public Node(Key k, Value v, int size) {
+            this.key = k;
+            this.value = v;
             this.size = size;
             //this.priority = priority;
         }
@@ -94,7 +94,32 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
     
     public void delete(Key k)   {
-    	//TODO: implement
+    	root = delete(root, k);
+    }
+
+    private Node delete(Node n, Key k) {
+        if (n == null) {
+            return null;
+        }
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            n.left = delete(n.left, k);
+        } else if (cmp > 0) {
+            n.right = delete(n.right, k);
+        } else {
+            if (n.right == null) {
+                return n.left;
+            }
+            if (n.left == null) {
+                return n.right;
+            }
+            Node temp = n;
+            n = min(temp.right);
+            n.right = deleteMin(temp.right);
+            n.left = temp.left;
+        }
+        n.size = size(n.left) + size(n.right) +1;
+        return n;
     }
 
     @SuppressWarnings("rawtypes")
