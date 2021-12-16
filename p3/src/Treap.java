@@ -104,13 +104,19 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public Key min()   {
-        //TODO: implement
-        return null;
+        Node actual = root;
+        while (actual.left != null) {
+            actual = actual.left;
+        }
+        return actual.key;
     }
 
     public Key max()  {
-        //TODO: implement
-        return null;
+        Node actual = root;
+        while (actual.right != null) {
+            actual = actual.right;
+        }
+        return actual.key;
     }
     
     public void deleteMin() {
