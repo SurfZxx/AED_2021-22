@@ -120,11 +120,29 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
     
     public void deleteMin() {
-        //TODO: implement
+        root = deleteMin(root);
+    }
+
+    private Node deleteMin(Node n) {
+        if (n.left == null) {
+            return n.right;
+        }
+        n.left = deleteMin(n.left);
+        n.size = size(n.left) + size(n.right) +1;
+        return n;
     }
     
     public void deleteMax()   {
-        //TODO: implement
+        root = deleteMax(root);
+    }
+
+    private Node deleteMax(Node n) {
+        if (n.right == null) {
+            return n.left;
+        }
+        n.right = deleteMax(n.right);
+        n.size = size(n.left) + size(n.right) +1;
+        return n;
     }
 
     public int rank(Key k)  {
