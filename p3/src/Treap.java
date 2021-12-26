@@ -5,6 +5,7 @@ import java.util.Random;
 public class Treap<Key extends Comparable<Key>,Value> {
 
     private Node root;
+    private Random random;
 
     private class Node {
         private Key key;
@@ -14,11 +15,11 @@ public class Treap<Key extends Comparable<Key>,Value> {
         private Node right;
         private int size;
 
-        public Node(Key k, Value v, int size/*, int priority */) {
+        public Node(Key k, Value v, int size, int priority) {
             this.key = k;
             this.value = v;
             this.size = size;
-            //this.priority = priority;
+            this.priority = priority;
         }
 
         public String toString() {
@@ -29,11 +30,13 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
 
     public Treap()  {
-        //TODO: implement
+        this.root = null;
+        this.random = new Random();
     }
     
     public Treap(Random r)  {
-        //TODO: implement
+        this.root = null;
+        this.random = r;
     }
 
     public int size() {
@@ -107,7 +110,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
     
     public void delete(Key k)   {
-    	root = delete(root, k);
+    	this.root = delete(this.root, k);
     }
 
     private Node delete(Node n, Key k) {
@@ -184,8 +187,18 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public int rank(Key k)  {
-        //TODO: implement
-        return 0;
+        int count = 0;
+        return rank(this.root, k, count);
+    }
+
+    private int rank(Node n, Key k, int count) {
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            count++;
+            return rank(n.left, k, count);
+        } else if (cmp > 0) {
+            return count;
+        }
     }
     
     public int size(Key min, Key max)   {
