@@ -44,11 +44,18 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public int size(Node n)   {
+        int right = 0;
+        int left = 0;
         if (n == null) {
             return 0;
-        } else {
-            return n.size;
         }
+        if (n.left != null) {
+            left = n.left.size;
+        }
+        if (n.right != null) {
+            right = n.right.size;
+        }
+        return right + left +1;
     }
 
     public Value get(Key k)   {
@@ -87,6 +94,14 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
     }
 
+    /*
+          b                             d
+        /   \                         /   \
+       a     d    rotate             b     e
+            / \                    /   \
+           c   e                  a     c
+     */
+
     private Node rotateLeft(Node root) {
         Node right = root.right;
         Node target = root.right.left;
@@ -96,6 +111,14 @@ public class Treap<Key extends Comparable<Key>,Value> {
         right.size = size(right);
         return right;
     }
+
+        /*
+          d                             b
+        /   \                         /   \
+       b      e    rotate            a     d
+     /  \                                /  \
+    a    c                              c     e
+     */
 
     private Node rotateRight(Node root) {
         Node left = root.left;
