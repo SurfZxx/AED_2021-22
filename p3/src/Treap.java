@@ -8,7 +8,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
     private class Node {
         private Key key;
-         private int priority;
+        private int priority;
         private Value value;
         private Node left;
         private Node right;
@@ -68,6 +68,10 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
     public boolean containsKey(Key k)   {
     	//TODO: implement
+        int cmp = k.compareTo(root.key);
+        if (cmp < 0) {
+            
+        }
         return false;
     }
 
@@ -114,7 +118,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
                 return n.right;
             }
             Node temp = n;
-            n = min(temp.right);
+            n = deleteMin(temp.right);
             n.right = deleteMin(temp.right);
             n.left = temp.left;
         }
