@@ -87,6 +87,26 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
     }
 
+    private Node rotateLeft(Node root) {
+        Node right = root.right;
+        Node target = root.right.left;
+        right.left = root;
+        root.right = target;
+        root.size = size(root);
+        right.size = size(right);
+        return right;
+    }
+
+    private Node rotateRight(Node root) {
+        Node left = root.left;
+        Node target = root.left.right;
+        left.right = root;
+        root.left = target;
+        root.size = size(root);
+        left.size = size(left);
+        return left;
+    }
+
     public void put(Key k, Value v) {
         this.root = put(this.root, k,v);
     }
@@ -194,16 +214,17 @@ public class Treap<Key extends Comparable<Key>,Value> {
     private int rank(Node n, Key k, int count) {
         int cmp = k.compareTo(n.key);
         if (cmp < 0) {
-            count++;
             return rank(n.left, k, count);
         } else if (cmp > 0) {
-            return count;
+
         }
     }
     
     public int size(Key min, Key max)   {
-        //TODO: implement
-        return 0;
+        if (containsKey(max)) {
+            return (rank(max) - rank(min)) +1;
+        }
+        return (rank(max) - rank(min));
     }
     
     public Key select(int n)   {
