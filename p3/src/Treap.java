@@ -14,7 +14,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         private Node right;
         private int size;
 
-        public Node(Key k, Value v, int size) {
+        public Node(Key k, Value v, int size/*, int priority */) {
             this.key = k;
             this.value = v;
             this.size = size;
@@ -58,21 +58,30 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
         int cmp = k.compareTo(n.key);
         if (cmp < 0) {
-            return get(n.left,k);
+            return get(n.left, k);
         } else if (cmp > 0) {
-            return get(n.right,k);
+            return get(n.right, k);
         } else {
             return n.value;
         }
     }
 
     public boolean containsKey(Key k)   {
-    	//TODO: implement
-        int cmp = k.compareTo(root.key);
-        if (cmp < 0) {
-            
+        return containsKey(this.root, k);
+    }
+
+    private boolean containsKey(Node n, Key k) {
+        if (n == null) {
+            return false;
         }
-        return false;
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            return containsKey(n.left, k);
+        } else if (cmp > 0) {
+            return containsKey(n.right, k);
+        } else {
+            return true;
+        }
     }
 
     public void put(Key k, Value v) {
