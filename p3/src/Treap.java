@@ -283,7 +283,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
         Node left = null;
         Node right = null;
-        if (this.left != null) {
+        if (Node.left != null) {
             left = this.left.shallowCopy();
             // copy.put(this.key, this.value);
         }
