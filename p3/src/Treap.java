@@ -235,12 +235,17 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     private int rank(Node n, Key k, int count) {
+        if (n == null) {
+            return 0;
+        }
         int cmp = k.compareTo(n.key);
         if (cmp < 0) {
             return rank(n.left, k, count);
         } else if (cmp > 0) {
-            count++;
-
+            count = count + size(n.left);
+            return rank(n.right, k, count);
+        } else {
+            count = size(n.left);
         }
         return count;
     }
