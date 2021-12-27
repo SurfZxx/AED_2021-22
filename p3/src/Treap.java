@@ -151,15 +151,13 @@ public class Treap<Key extends Comparable<Key>,Value> {
         int cmp = k.compareTo(n.key);
         if (cmp < 0) {
             n.left = put(n.left, k, v);
-            if (n.left.priority < n.right.priority) {
-                n = rotateLeft(n);
-                delete(n.left, k);
+            if (n.priority < n.left.priority) {
+                n = rotateRight(n);
             }
         } else if (cmp > 0) {
             n.right = put(n.right, k, v);
-            if (n.left.priority > n.right.priority) {
-                n = rotateRight(n);
-                n.right = delete(n.right, k);
+            if (n.priority < n.right.priority) {
+                n = rotateLeft(n);
             }
         } else {
             n.value = v;
@@ -265,7 +263,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
             return n.right;
         }
         n.left = deleteMin(n.left);
-        n.size = size(n.left) + size(n.right) +1;
+        n.size = size(n);
         return n;
     }
     
@@ -278,7 +276,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
             return n.left;
         }
         n.right = deleteMax(n.right);
-        n.size = size(n.left) + size(n.right) +1;
+        n.size = size(n);
         return n;
     }
 
