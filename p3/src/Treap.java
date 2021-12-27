@@ -314,16 +314,20 @@ public class Treap<Key extends Comparable<Key>,Value> {
     
     public Key select(int n)   {
         count = -1;
-        selected = kthSmallest(this.root, n);
+        selected = smallest(this.root, n);
+        if (selected == null) {
+            return null;
+        }
+        
         return selected.key;
     }
 
 
-    public Node kthSmallest(Node root, int n) {
+    public Node smallest(Node root, int n) {
         if (root == null) {
             return null;
         }
-        Node left = kthSmallest(root.left, n);
+        Node left = smallest(root.left, n);
         if (left != null) {
             return left;
         }
@@ -331,7 +335,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (count == n) {
             return root;
         }
-        return kthSmallest(root.right, n);
+        return smallest(root.right, n);
     }
     
     public Iterable<Key> keys()   {
