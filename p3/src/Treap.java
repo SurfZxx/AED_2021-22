@@ -191,7 +191,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
             } else {
                 if (n.left.priority < n.right.priority) {
                     n = rotateLeft(n);
-                    delete(n.left, k);
+                    n.left = delete(n.left, k);
                 } else {
                     n = rotateRight(n);
                     n.right = delete(n.right, k);
@@ -298,7 +298,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (cmp < 0) {
             return rank(n.left, k, count);
         } else if (cmp > 0) {
-            count = count + size(n.left);
+            count = count + size(n.left)+1;
             return rank(n.right, k, count);
         } else {
             count = count + size(n.left);
@@ -318,6 +318,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         selected = kthSmallest(this.root, n);
         return selected.key;
     }
+
 
     public Node kthSmallest(Node root, int n) {
         if (root == null) {
@@ -366,8 +367,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     
     public Iterable<Key> keys(Key min, Key max)   {
         Queue<Key> queue = new LinkedList<Key>();
-        selected = this.root;
-        for(int i = rank(min); selected != null && i < rank(max); i++) {
+        for(int i = rank(min); i < rank(min) + size(min, max); i++) {
             select(i);
             queue.add(selected.key);
         }
@@ -383,7 +383,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     private Node shallowCopy(Node n, Node n2) {
-        n2 = n;
+        n2 = new Node(n.key, n.value, n.size, n.priority);
         if (n.left != null) {
             n2.left = shallowCopy(n.left, n2.left);
         }
