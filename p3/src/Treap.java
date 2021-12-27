@@ -97,7 +97,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     /*
           b                             d
         /   \                         /   \
-       a     d    rotate             b     e
+       a     d    rotate left        b     e
             / \                    /   \
            c   e                  a     c
      */
@@ -115,8 +115,8 @@ public class Treap<Key extends Comparable<Key>,Value> {
         /*
           d                             b
         /   \                         /   \
-       b      e    rotate            a     d
-     /  \                                /  \
+       b      e    rotate right      a     d
+     /  \                                /   \
     a    c                              c     e
      */
 
@@ -239,8 +239,10 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (cmp < 0) {
             return rank(n.left, k, count);
         } else if (cmp > 0) {
+            count++;
 
         }
+        return count;
     }
     
     public int size(Key min, Key max)   {
