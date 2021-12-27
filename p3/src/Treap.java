@@ -374,6 +374,8 @@ public class Treap<Key extends Comparable<Key>,Value> {
         //prof escreveu
         Treap<Key, Value> copy = new Treap<>();
         copy.root = shallowCopy(this.root, copy.root);
+        //
+        return copy;
     }
 
     private Node shallowCopy(Node n, Node n2) {
