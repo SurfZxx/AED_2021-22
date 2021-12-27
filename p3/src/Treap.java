@@ -239,6 +239,9 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public Key min()   {
+        if (root == null) {
+            return null;
+        }
         Node actual = root;
         while (actual.left != null) {
             actual = actual.left;
@@ -247,6 +250,9 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public Key max()  {
+        if (root == null) {
+            return null;
+        }
         Node actual = root;
         while (actual.right != null) {
             actual = actual.right;
