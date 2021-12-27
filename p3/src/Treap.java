@@ -318,7 +318,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (selected == null) {
             return null;
         }
-        
+
         return selected.key;
     }
 
@@ -337,11 +337,12 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
         return smallest(root.right, n);
     }
-    
+
+    // SIZE DA HEAD, EH O SIZE DA TREAP!!!!!
     public Iterable<Key> keys()   {
         Queue<Key> queue = new LinkedList<>();
-        selected = this.root;
-        for (int i = 0; selected != null; i++) {
+        int size = size();
+        for (int i = 0; i < size; i++) {
             select(i);
             queue.add(selected.key);
         }
@@ -350,8 +351,8 @@ public class Treap<Key extends Comparable<Key>,Value> {
     
     public Iterable<Value> values()   {
         Queue<Value> queue = new LinkedList<Value>();
-        selected = this.root;
-        for(int i = 0; selected != null; i++) {
+        int size = size();
+        for(int i = 0; i < size; i++) {
             select(i);
             queue.add(selected.value);
         }
@@ -360,8 +361,8 @@ public class Treap<Key extends Comparable<Key>,Value> {
     
     public Iterable<Integer> priorities()  {
         Queue<Integer> queue = new LinkedList<Integer>();
-        selected = this.root;
-        for(int i = 0; selected != null; i++) {
+        int size = size();
+        for(int i = 0; i < size; i++) {
             select(i);
             queue.add(selected.priority);
         }
