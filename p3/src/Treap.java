@@ -1,4 +1,4 @@
-// package aed.tables;
+package aed.tables;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -311,7 +311,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     
     public Key select(int n)   {
         count = -1;
-        selected = kthSmallest(this.root, k);
+        selected = kthSmallest(this.root, n);
         return selected.key;
     }
 
@@ -382,7 +382,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
             n2.left = shallowCopy(n.left, n2.left);
         }
         if (n.right != null) {
-            n2.right = shallowCopy(n.right, n2,right);
+            n2.right = shallowCopy(n.right, n2.right);
         }
         return n2;
     }
