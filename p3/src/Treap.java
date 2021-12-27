@@ -136,13 +136,21 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
     private Node put(Node n, Key k, Value v) {
         if (n == null) {
-            return new Node(k,v,1);
+            return new Node(k,v,1, random.nextInt());
         }
         int cmp = k.compareTo(n.key);
         if (cmp < 0) {
             n.left = put(n.left, k, v);
+            if (n.left.priority < n.right.priority) {
+                n = rotateLeft(root);
+                delete(n.left, k);
+            }
         } else if (cmp > 0) {
             n.right = put(n.right, k, v);
+            if (n.left.priority > n.right.priority) {
+                n = rotateRight(n);
+                n.right = delete(n.right, k);
+            }
         } else {
             n.value = v;
         }
@@ -166,16 +174,26 @@ public class Treap<Key extends Comparable<Key>,Value> {
         } else if (cmp > 0) {
             n.right = delete(n.right, k);
         } else {
+            n.priority = Integer.MIN_VALUE;
             if (n.right == null) {
                 return n.left;
             }
             if (n.left == null) {
                 return n.right;
+            } else {
+                if (n.left.priority < n.right.priority) {
+                    n = rotateLeft(root);
+                    delete(n.left, k);
+                } else {
+                    n = rotateRight(n);
+                    n.right = delete(n.right, k);
+                }
             }
-            Node temp = n;
-            n = deleteMin(temp.right);
-            n.right = deleteMin(temp.right);
-            n.left = temp.left;
+//            comentario funcionava se nao fosse treap
+//            Node temp = n;
+//            n = deleteMin(temp.right);
+//            n.right = deleteMin(temp.right);
+//            n.left = temp.left;
         }
         n.size = size(n.left) + size(n.right) +1;
         return n;
