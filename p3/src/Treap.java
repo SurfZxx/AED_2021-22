@@ -491,7 +491,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         System.lineSeparator();
         printTreap(root.left, space);
     }
-
+    // como main aqui serve para testar, main baseada no Rafael Reis a68039
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Treap<Integer, Integer> Tree = new Treap<>(new Random());
