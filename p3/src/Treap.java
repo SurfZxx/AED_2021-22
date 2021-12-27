@@ -1,11 +1,16 @@
 // package aed.tables;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Treap<Key extends Comparable<Key>,Value> {
 
     private Node root;
     private Random random;
+    private Node selected;
+    private int count;
 
     private class Node {
         private Key key;
@@ -31,6 +36,11 @@ public class Treap<Key extends Comparable<Key>,Value> {
 
     public Treap()  {
         this.root = null;
+        this.random = new Random();
+    }
+
+    public Treap(Node root) {
+        this.root = root;
         this.random = new Random();
     }
     
@@ -142,7 +152,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (cmp < 0) {
             n.left = put(n.left, k, v);
             if (n.left.priority < n.right.priority) {
-                n = rotateLeft(root);
+                n = rotateLeft(n);
                 delete(n.left, k);
             }
         } else if (cmp > 0) {
@@ -156,7 +166,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
 
         //update the node size
-        n.size = size(n.left) + size(n.right) +1;
+        n.size = size(n);
         return n;
     }
     
@@ -182,7 +192,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
                 return n.right;
             } else {
                 if (n.left.priority < n.right.priority) {
-                    n = rotateLeft(root);
+                    n = rotateLeft(n);
                     delete(n.left, k);
                 } else {
                     n = rotateRight(n);
@@ -195,14 +205,39 @@ public class Treap<Key extends Comparable<Key>,Value> {
 //            n.right = deleteMin(temp.right);
 //            n.left = temp.left;
         }
-        n.size = size(n.left) + size(n.right) +1;
+        n.size = size(n);
         return n;
     }
 
     @SuppressWarnings("rawtypes")
 	public Treap[] split(Key k)  {
-    	//TODO: implement
-        return null;
+        Treap[] result = new Treap[2];
+        Node head = split(this.root, k);
+        result[0] = new Treap<>(head.left);
+        result[1] = new Treap<>(head.right);
+        return result;
+    }
+
+    private Node split(Node n, Key k) {
+        if (n == null) {
+            return new Node(k, null, 1, Integer.MAX_VALUE);
+        }
+        int cmp = k.compareTo(n.key);
+        if (cmp < 0) {
+            n.left = split(n.left, k);
+            if (n.priority < n.left.priority) {
+                return rotateRight(n);
+            }
+        } else if (cmp > 0) {
+            n.right = split(n.right, k);
+            if (n.priority < n.right.priority) {
+                return rotateLeft(n);
+            }
+        } else {
+            n.priority = Integer.MAX_VALUE;
+        }
+        n.size = size(n);
+        return n;
     }
 
     public Key min()   {
@@ -248,8 +283,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
 
     public int rank(Key k)  {
-        int count = 0;
-        return rank(this.root, k, count);
+        return rank(this.root, k, 0);
     }
 
     private int rank(Node n, Key k, int count) {
@@ -263,7 +297,7 @@ public class Treap<Key extends Comparable<Key>,Value> {
             count = count + size(n.left);
             return rank(n.right, k, count);
         } else {
-            count = size(n.left);
+            count = count + size(n.left);
         }
         return count;
     }
@@ -276,46 +310,96 @@ public class Treap<Key extends Comparable<Key>,Value> {
     }
     
     public Key select(int n)   {
-        //TODO: implement
-        return null;
+        count = -1;
+        selected = kthSmallest(this.root, k);
+        return selected.key;
+    }
+
+    public Node kthSmallest(Node root, int n) {
+        if (root == null) {
+            return null;
+        }
+        Node left = kthSmallest(root.left, n);
+        if (left != null) {
+            return left;
+        }
+        count++;
+        if (count == n) {
+            return root;
+        }
+        return kthSmallest(root.right, n);
     }
     
     public Iterable<Key> keys()   {
-        //TODO: implement
-        return null;
+        Queue<Key> queue = new LinkedList<>();
+        selected = this.root;
+        for (int i = 0; selected != null; i++) {
+            select(i);
+            queue.add(selected.key);
+        }
+        return queue;
     }
     
     public Iterable<Value> values()   {
-        //TODO: implement
-        return null;
+        Queue<Value> queue = new LinkedList<Value>();
+        selected = this.root;
+        for(int i = 0; selected != null; i++) {
+            select(i);
+            queue.add(selected.value);
+        }
+        return queue;
     }
     
     public Iterable<Integer> priorities()  {
-        //TODO: implement
-        return null;
+        Queue<Integer> queue = new LinkedList<Integer>();
+        selected = this.root;
+        for(int i = 0; selected != null; i++) {
+            select(i);
+            queue.add(selected.priority);
+        }
+        return queue;
     }
     
     public Iterable<Key> keys(Key min, Key max)   {
-        //TODO: implement
-        return null;
+        Queue<Key> queue = new LinkedList<Key>();
+        selected = this.root;
+        for(int i = rank(min); selected != null && i < rank(max); i++) {
+            select(i);
+            queue.add(selected.key);
+        }
+        return queue;
     }
 
     public Treap<Key,Value> shallowCopy() {
-        Treap<Key,Value> copy = new Treap<>();
-        copy.root = copy(copy.root);
-
-        Node left = null;
-        Node right = null;
-        if (Node.left != null) {
-            left = this.left.shallowCopy();
-            // copy.put(this.key, this.value);
-        }
-        if (this.right != null) {
-            right = this.right.shallowCopy();
-            // copy.put(this.key, this.value);
-        }
-        // return Node(this.key, this.value, left, right);
+        //prof escreveu
+        Treap<Key, Value> copy = new Treap<>();
+        copy.root = shallowCopy(this.root, copy.root);
     }
+
+    private Node shallowCopy(Node n, Node n2) {
+        n2 = n;
+        if (n.left != null) {
+            n2.left = shallowCopy(n.left, n2.left);
+        }
+        if (n.right != null) {
+            n2.right = shallowCopy(n.right, n2,right);
+        }
+        return n2;
+    }
+
+//    feito na aula, ideia +/- mas mal feito
+//        Node left = null;
+//        Node right = null;
+//        if (Node.left != null) {
+//            left = this.left.shallowCopy();
+//            // copy.put(this.key, this.value);
+//        }
+//        if (this.right != null) {
+//            right = this.right.shallowCopy();
+//            // copy.put(this.key, this.value);
+//        }
+//        // return Node(this.key, this.value, left, right);
+//    }
 
     //helper method that uses the treap to build an array with a heap structure
     private void fillHeapArray(Node n, Object[] a, int position)    {
@@ -381,8 +465,72 @@ public class Treap<Key extends Comparable<Key>,Value> {
         }
     }
 
+    public void printTreap(Node root, int space) {
+        final int height = 20;
+
+        // Base case
+        if (root == null) {
+            return;
+        }
+
+        // increase distance between levels
+        space += height;
+
+        // print the right child first
+        printTreap(root.right, space);
+        System.lineSeparator();
+
+        // print the current node after padding with spaces
+        for (int i = height; i < space; i++) {
+            System.out.print(' ');
+        }
+
+        System.out.println("(" + "k=" + root.key + " v=" + root.value + " s=" + root.size + " p=" + root.priority + ")" + " ");
+
+        // print the left child
+        System.lineSeparator();
+        printTreap(root.left, space);
+    }
+
     public static void main(String[] args) {
-        System.out.println("Boas");
+        Scanner scanner = new Scanner(System.in);
+        Treap<Integer, Integer> Tree = new Treap<>(new Random());
+        // Tree.put(10, 5);
+        // Tree.put(12, 5);
+        // Tree.put(90, 5);
+        // Tree.put(8, 5);
+        // Tree.put(14, 5);
+        // Tree.put(6, 5);
+        // Tree.put(50, 5);
+        Random random = new Random();
+        for(int i = 0; i < 10; i++)
+            Tree.put(random.nextInt(1000), 5);
+
+        Tree.printTreap(Tree.root, 0);
+        System.out.println("________________________");
+
+        Treap<Integer, Integer> newTree = Tree.shallowCopy();
+        Tree.printTreap(newTree.root, 0);
+        System.out.println("________________________");
+
+        // Treap[] split = Tree.split(500);
+
+        // Tree.printTreap(split[0].root, 0);
+        // System.out.println("*________________________");
+        // System.out.println("------------------------*");
+
+
+        // Tree.printTreap(split[1].root, 0);
+        // System.out.println("________________________");
+
+        // while(sc.hasNext()) {
+        //     // System.out.println(Tree.size(sc.nextInt(), sc.nextInt()));
+        //     // System.out.println(Tree.select(sc.nextInt()));
+        //     // Tree.printTreap(Tree.root, 0);
+        //     // System.out.println("________________________");
+        // }
+
+        scanner.close();
     }
     
 }
