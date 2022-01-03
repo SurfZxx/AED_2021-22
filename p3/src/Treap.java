@@ -286,6 +286,9 @@ public class Treap<Key extends Comparable<Key>,Value> {
         return n;
     }
 
+//    k = key, retomar nr de nos do filho esquerdo
+//    k < key, procurar a esquerda
+//    k > key, contar todos da esquerda +1 + procurar na direita
     public int rank(Key k)  {
         return rank(this.root, k, 0);
     }
@@ -318,19 +321,21 @@ public class Treap<Key extends Comparable<Key>,Value> {
         if (selected == null) {
             return null;
         }
-
         return selected.key;
     }
 
-
     public Node smallest(Node root, int n) {
+//        treap vazia
         if (root == null) {
             return null;
         }
+//        procura para o lado esquerdo
         Node left = smallest(root.left, n);
+//        se n estiver para o lado esquerdo
         if (left != null) {
             return left;
         }
+//        se o elemento for = n, da return
         count++;
         if (count == n) {
             return root;
