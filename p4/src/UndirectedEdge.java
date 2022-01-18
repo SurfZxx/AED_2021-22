@@ -1,4 +1,4 @@
-package aed.graphs;
+//package aed.graphs;
 
 public class UndirectedEdge implements Comparable<UndirectedEdge>{
 	
