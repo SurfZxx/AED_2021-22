@@ -2,21 +2,30 @@ import java.util.*;
 
 public class MaxCycleMST {
 
-    private int count; //apenas para contar por quantos vertices passou
-    private int vCount; //vertices
-    private int eCount; //edges ... arestas
-    private Object[] adj; //vertices adjacentes
-    private boolean[] visited; //se um vertice ja foi visitado ou nao
+    public class Graph {
 
-    private void visit(int v) {
-        this.count++;
-        this.visited[v] = true;
-        for (int adj: graph.adj(v)) {
-            if (!visited[adj]) {
-                visit(adj);
+        private int count; //apenas para contar por quantos vertices passou
+        private int vCount; //vertices
+        private int eCount; //edges ... arestas
+        private LinkedList<Integer>[] adj; //vertices adjacentes
+        private boolean[] visited; //se um vertice ja foi visitado ou nao
+
+        @SuppressWarnings("unchecked")
+        public Graph(int vCount) {
+            this.vCount = vCount;
+            this.eCount = eCount;
+            this.adj = (LinkedList<Integer>[])  new Object[vCount];
+
+            for (int i = 0; i < vCount; i++) {
+                this.adj[i] = new LinkedList<Integer>();
             }
+
         }
+
+
+
     }
+
 
     public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
         //to do
