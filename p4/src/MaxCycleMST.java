@@ -1,8 +1,12 @@
 import java.util.*;
 
-public class MaxCycleMST<DiGraph> {
+public class MaxCycleMST extends UndirectedWeightedGraph{
 
-    public class CycleDetector {
+    public MaxCycleMST(int vCount) {
+        super(vCount);
+    }
+
+    public class CycleDetector<DiGraph> {
 
         private boolean[] visited;
         private boolean[] inCurrentPath;
