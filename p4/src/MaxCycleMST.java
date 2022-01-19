@@ -44,6 +44,20 @@ public class MaxCycleMST {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Hello there");
+        g.addEdge(new UndirectedEdge(0, 1, 10));
+        g.addEdge(new UndirectedEdge(1, 2, 4));
+        g.addEdge(new UndirectedEdge(1, 3, 6));
+        g.addEdge(new UndirectedEdge(2, 6, 8));
+        g.addEdge(new UndirectedEdge(6, 8, 14));
+        g.addEdge(new UndirectedEdge(8, 9, 12));
+        g.addEdge(new UndirectedEdge(9, 11, 15));
+        g.addEdge(new UndirectedEdge(11, 12, 15));
+        g.addEdge(new UndirectedEdge(12, 7, 20));
+        g.addEdge(new UndirectedEdge(7, 4, 10));
+        g.addEdge(new UndirectedEdge(4, 3, 12));
+        g.addEdge(new UndirectedEdge(3, 5, 30));
+        g.addEdge(new UndirectedEdge(5, 10, 25));
+        g.addEdge(new UndirectedEdge(2, 3, 20));
         scanner.close();
     }
 }
