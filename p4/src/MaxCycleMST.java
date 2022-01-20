@@ -3,7 +3,6 @@ import java.util.*;
 public class MaxCycleMST {
 
 
-
         private boolean[] visited;
         private boolean[] inCurrentPath;
         private UndirectedWeightedGraph graph;
@@ -48,16 +47,16 @@ public class MaxCycleMST {
         private void visit(int from, int v) {//int from, int v,
             this.inCurrentPath[v] = true;
             this.visited[v] = true;
-            for(UndirectedWeightedGraph adj : graph.adj(v))	{
+            for(UndirectedEdge adj : graph.adj(v))	{
                 //if a cycle was already detected we do not need to continue
                 if(this.hasCycle) return;
-                else if(!this.visited[adj]) {
+                else if(!this.visited[adj.v2()]) {
                     //if a vertex was already visited, we need to check if that vertex already exists
                     //in the current path (if so, we detected a cycle)
-                    ciclo.push(e);
+                    ciclo.push();
                     count++;
-                    visit(v,adj);
-                } else if(this.inCurrentPath[adj]) {
+                    visit(v,adj.v2());
+                } else if(this.inCurrentPath[adj.v1()]) {
                     this.hasCycle = true;
                     return;
                 }
