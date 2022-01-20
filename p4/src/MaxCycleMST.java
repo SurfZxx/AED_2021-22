@@ -9,21 +9,18 @@ public class MaxCycleMST {
         private UndirectedWeightedGraph graph;
         private boolean hasCycle;
         private int count;
-        private Stack<Integer> ciclo = new Stack<Integer>();
+        private Stack<Hashtable<UndirectedEdge,UndirectedEdge>> ciclo = new Stack<>();
+        //private Stack<Integer> ciclo = new Stack<>();
 
         public MaxCycleMST(UndirectedWeightedGraph g) {
+            this.graph = g;
             this.visited = new boolean[g.vCount()];
             this.inCurrentPath = new boolean[g.vCount()];
-            this.ciclo = new Stack<Integer>();
-            this.graph = g;
+            this.hasCycle = false;
+            this.ciclo = new Stack<Hashtable<UndirectedEdge, UndirectedEdge>>();
+            //this.ciclo = new Stack<>();
             this.count = 0;
         }
-
-        // public CycleDetector(DiGraph g) {
-        //     this.graph = g;
-        //     this.visited = new boolean[g.vCount()];
-        //     this.inCurrentPath = new boolean[g.vCount()];
-        // }
 
         public void search() {
             int vertices = this.graph.vCount();
@@ -51,13 +48,13 @@ public class MaxCycleMST {
         private void visit(int from, int v) {//int from, int v,
             this.inCurrentPath[v] = true;
             this.visited[v] = true;
-            for(UndirectedEdge adj : graph.adj(v))	{
+            for(UndirectedWeightedGraph adj : graph.adj(v))	{
                 //if a cycle was already detected we do not need to continue
                 if(this.hasCycle) return;
                 else if(!this.visited[adj]) {
                     //if a vertex was already visited, we need to check if that vertex already exists
                     //in the current path (if so, we detected a cycle)
-                    ciclo.push(v);
+                    ciclo.push(e);
                     count++;
                     visit(v,adj);
                 } else if(this.inCurrentPath[adj]) {
@@ -69,6 +66,7 @@ public class MaxCycleMST {
             for (int i = 0; i < count; i++) {
                 ciclo.pop();
             }
+            count = 0;
         }
 
         public boolean hasCycle(){
@@ -77,7 +75,7 @@ public class MaxCycleMST {
 
 
     public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
-        //to do
+        search();
     }
 
     public UndirectedWeightedGraph buildMST() {
