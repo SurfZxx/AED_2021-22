@@ -1,30 +1,32 @@
 import java.util.*;
 
-public class MaxCycleMST extends UndirectedWeightedGraph{
+public class MaxCycleMST {
 
-    public MaxCycleMST(int vCount) {
-        super(vCount);
-    }
 
-    public class CycleDetector<DiGraph> {
 
         private boolean[] visited;
         private boolean[] inCurrentPath;
-        private DiGraph graph;
+        private UndirectedWeightedGraph graph;
         private boolean hasCycle;
-        private int eCount; //quantos arcos ha no grafo
-        private int vCount;
         private int count;
         private Stack<Integer> ciclo = new Stack<Integer>();
 
-        public CycleDetector(DiGraph g) {
-            this.graph = g;
+        public MaxCycleMST(UndirectedWeightedGraph g) {
             this.visited = new boolean[g.vCount()];
             this.inCurrentPath = new boolean[g.vCount()];
+            this.ciclo = new Stack<Integer>();
+            this.graph = g;
+            this.count = 0;
         }
 
+        // public CycleDetector(DiGraph g) {
+        //     this.graph = g;
+        //     this.visited = new boolean[g.vCount()];
+        //     this.inCurrentPath = new boolean[g.vCount()];
+        // }
+
         public void search() {
-            int vertives = this.graph.vCount();
+            int vertices = this.graph.vCount();
             this.hasCycle = false;
             //initialize array to false
             for(int i = 0; i < vertices; i++) {
@@ -72,43 +74,6 @@ public class MaxCycleMST extends UndirectedWeightedGraph{
         public boolean hasCycle(){
             return this.hasCycle;
         }
-    }
-
-
-        private int count; //apenas para contar por quantos vertices passou
-        private int vCount; //vertices
-        private int eCount; //edges ... arestas
-        private LinkedList<Integer>[] adj; //vertices adjacentes
-        private boolean[] visited; //se um vertice ja foi visitado ou nao
-        private DiGraph graph;
-
-        @SuppressWarnings("unchecked")
-        public Graph(int vCount, int eCount) {
-            this.vCount = vCount;
-            this.eCount = eCount;
-            this.adj = (LinkedList<Integer>[])  new Object[vCount];
-
-            for (int i = 0; i < vCount; i++) {
-                this.adj[i] = new LinkedList<Integer>();
-            }
-        }
-
-
-
-    public void visit(int v) {
-        this.count++;
-        this.visited[v] = true;
-        for (int adj : graph.adj(v)) {
-            if (!visited[adj]) {
-                visit(adj);
-            }
-        }
-
-    }
-
-    public void search(int startingV) {
-            int vertices = this.graph.vCount();
-    }
 
 
     public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
