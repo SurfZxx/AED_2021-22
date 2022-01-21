@@ -68,11 +68,11 @@ import java.util.Stack;
             this.inCurrentPath[v] = false;
         }
 
-        public boolean hasCycle(){
+        public boolean hasCycle() {
             return this.hasCycle;
         }
 
-        public Stack<UndirectedEdge> getCycle(){
+        public Stack<UndirectedEdge> getCycle() {
             Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
             boolean end = false;
             cycle.push(ciclo.pop());
