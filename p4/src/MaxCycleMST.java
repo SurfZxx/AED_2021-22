@@ -8,7 +8,7 @@ public class MaxCycleMST {
         private UndirectedWeightedGraph graph;
         private boolean hasCycle;
         private int count;
-        private Stack<Hashtable<UndirectedEdge,UndirectedEdge>> ciclo = new Stack<>();
+        private Stack<UndirectedEdge> ciclo = new Stack<>();
         //private Stack<Integer> ciclo = new Stack<>();
         private int maxWeight;
 
@@ -17,7 +17,7 @@ public class MaxCycleMST {
             this.visited = new boolean[g.vCount()];
             this.inCurrentPath = new boolean[g.vCount()];
             this.hasCycle = false;
-            this.ciclo = new Stack<Hashtable<UndirectedEdge, UndirectedEdge>>();
+            this.ciclo = new Stack<UndirectedEdge>();
             //this.ciclo = new Stack<>();
             this.count = 0;
         }
@@ -33,7 +33,7 @@ public class MaxCycleMST {
             for(int i = 0; i < vertices; i++) {
                 //start a new search for each vertex that has not been visited yet
                 if(!this.visited[i]) {
-                    visit(i-1,i);
+                    visit(null,i);
                 } else if(this.visited[i]){
                     hasCycle = true;
                     return;
@@ -51,28 +51,24 @@ public class MaxCycleMST {
             for(UndirectedEdge adj : graph.adj(v))	{
                 //if a cycle was already detected we do not need to continue
                 if(this.hasCycle) return;
-                else if(!this.visited[adj.v2()]) {
-                    //if a vertex was already visited, we need to check if that vertex already exists
-                    //in the current path (if so, we detected a cycle)
-                    if (!adj.equals(from)) {
-                        ciclo.push(adj.v1());
+                if (!adj.equals(from)) {
+                    if(!this.visited[adj.v2()]) {
+                        //if a vertex was already visited, we need to check if that vertex already exists
+                        //in the current path (if so, we detected a cycle)
+                        ciclo.push(adj);
                         this.count++;
-                        visit(v,adj.v2());
-                    } else {
-
+                        visit(adj,adj.v2());
+                    } else if(this.inCurrentPath[adj.v1()]) {
+                        this.hasCycle = true;
+                        return;
                     }
-                    
-                } else if(this.inCurrentPath[adj.v1()]) {
-                    this.hasCycle = true;
-                    return;
                 }
+                this.inCurrentPath[v] = false;
+                for (int i = 0; i < this.count; i++) {
+                    ciclo.pop();
+                }
+                this.count = 0;
             }
-            this.inCurrentPath[v] = false;
-            for (int i = 0; i < this.count; i++) {
-                ciclo.pop();
-            }
-            this.count = 0;
-        }
 
         public boolean hasCycle(){
             return this.hasCycle;
