@@ -10,6 +10,7 @@ public class MaxCycleMST {
         private int count;
         private Stack<Hashtable<UndirectedEdge,UndirectedEdge>> ciclo = new Stack<>();
         //private Stack<Integer> ciclo = new Stack<>();
+        private int maxWeight;
 
         public MaxCycleMST(UndirectedWeightedGraph g) {
             this.graph = g;
@@ -44,7 +45,7 @@ public class MaxCycleMST {
 
 
 
-        private void visit(int from, int v) {//int from, int v,
+        private void visit(UndirectedEdge from, int v) {//int from, int v,
             this.inCurrentPath[v] = true;
             this.visited[v] = true;
             for(UndirectedEdge adj : graph.adj(v))	{
@@ -53,19 +54,24 @@ public class MaxCycleMST {
                 else if(!this.visited[adj.v2()]) {
                     //if a vertex was already visited, we need to check if that vertex already exists
                     //in the current path (if so, we detected a cycle)
-                    ciclo.push();
-                    count++;
-                    visit(v,adj.v2());
+                    if (!adj.equals(from)) {
+                        ciclo.push(adj.v1());
+                        this.count++;
+                        visit(v,adj.v2());
+                    } else {
+
+                    }
+                    
                 } else if(this.inCurrentPath[adj.v1()]) {
                     this.hasCycle = true;
                     return;
                 }
             }
             this.inCurrentPath[v] = false;
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < this.count; i++) {
                 ciclo.pop();
             }
-            count = 0;
+            this.count = 0;
         }
 
         public boolean hasCycle(){
