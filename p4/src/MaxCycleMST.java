@@ -102,7 +102,9 @@ public class MaxCycleMST {
         cycle.push(ciclo.pop());
         while(!end) {
             UndirectedEdge edge = ciclo.pop();
-            if(edge.v1() == start|| edge.v2() == start) end = true;
+            if(edge.v1() == start|| edge.v2() == start) {
+                end = true;
+            }
             cycle.push(edge);
         }
         return cycle;
