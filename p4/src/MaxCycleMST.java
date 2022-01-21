@@ -1,75 +1,72 @@
 //package aed.graphs;
 
-import java.util.*;
+import java.util.Stack;
 
 public class MaxCycleMST {
 
-        private boolean[] visited;
-        private boolean[] inCurrentPath;
-        private UndirectedWeightedGraph graph;
-        private boolean hasCycle;
-        //private int count;
-        private Stack<UndirectedEdge> ciclo;// = new Stack<UndirectedEdge>();
-        //private Stack<Integer> ciclo = new Stack<>();
-        //private int maxWeight;
-        private int start;
-        private UndirectedWeightedGraph g = null;
-        private UndirectedWeightedGraph mst = null;
+    private boolean[] visited;
+    private boolean[] inCurrentPath;
+    private UndirectedWeightedGraph graph;
+    private boolean hasCycle;
+    //private int count;
+    private Stack<UndirectedEdge> ciclo;// = new Stack<UndirectedEdge>();
+    //private Stack<Integer> ciclo = new Stack<>();
+    //private int maxWeight;
+    private int start;
+    private UndirectedWeightedGraph g = null;
+    private UndirectedWeightedGraph mst = null;
 
-        public MaxCycleMST(UndirectedWeightedGraph g) {
-            this.graph = g;
-            this.g = g;
-            this.visited = new boolean[g.vCount()];
-            this.inCurrentPath = new boolean[g.vCount()];
-            this.ciclo = new Stack<UndirectedEdge>();
-            //this.ciclo = new Stack<>();
-            //this.count = 0;
+    public MaxCycleMST(UndirectedWeightedGraph g) {
+        this.graph = g;
+        this.g = g;
+        this.visited = new boolean[g.vCount()];
+        this.inCurrentPath = new boolean[g.vCount()];
+        this.ciclo = new Stack<UndirectedEdge>();
+        //this.ciclo = new Stack<>();
+        //this.count = 0;
 
-        }
+    }
 
-        public void search() {
-            int vertices = this.graph.vCount();
-            this.hasCycle = false;
-            //initialize array to false
-            for(int i = 0; i < vertices; i++) {
-                this.visited[i] = false;
-                this.inCurrentPath[i] = false;
-            }
-            for(int i = 0; i < vertices; i++) {
-                //start a new search for each vertex that has not been visited yet
-                if(!this.visited[i]) {
-                    visit(i,i);
+    public void search() {
+                int vertices = this.graph.vCount();
+                this.hasCycle = false;
+                //initialize array to false
+                for(int i = 0; i < vertices; i++) {
+                    this.visited[i] = false;
+                    this.inCurrentPath[i] = false;
                 }
-                if(this.hasCycle) return;
+                for(int i = 0; i < vertices; i++) {
+                    //start a new search for each vertex that has not been visited yet
+                    if(!this.visited[i]) {
+                        visit(i,i);
+                    }
+                    if(this.hasCycle) return;
+                }
             }
-        }
 
-
-
-
-        private void visit(int from, int v) {//int from, int v,
-            this.inCurrentPath[v] = true;
-            this.visited[v] = true;
-            for (UndirectedEdge adj : graph.adj(v)) {
-                //if a cycle was already detected we do not need to continue
-                if (this.hasCycle) return;
-                else if (!this.visited[adj.other(v)] && adj.other(v) != from) {
-                    ciclo.push(adj);
-                    visit(v, adj.other(v));
-                } else if (adj.other(v) != from) {
-                    start = adj.other(v);
-                    ciclo.push(adj);
-                    this.hasCycle = true;
+            private void visit(int from, int v) {//int from, int v,
+                this.inCurrentPath[v] = true;
+                this.visited[v] = true;
+                for (UndirectedEdge adj : graph.adj(v)) {
+                    //if a cycle was already detected we do not need to continue
+                    if (this.hasCycle) return;
+                    else if (!this.visited[adj.other(v)] && adj.other(v) != from) {
+                        ciclo.push(adj);
+                        visit(v, adj.other(v));
+                    } else if (adj.other(v) != from) {
+                        start = adj.other(v);
+                        ciclo.push(adj);
+                        this.hasCycle = true;
+                        return;
+                    }
+                }
+                if (this.hasCycle) {
                     return;
                 }
-            }
-            if (this.hasCycle) {
-                return;
-            }
-            if (!ciclo.empty()) {
-                this.ciclo.pop();
-            }
-            this.inCurrentPath[v] = false;
+                if (!ciclo.empty()) {
+                    this.ciclo.pop();
+                }
+                this.inCurrentPath[v] = false;
 //                if (!adj.equals(from)) {
 //                    if (!this.visited[adj.v2()]) {
 //                        //if a vertex was already visited, we need to check if that vertex already exists
@@ -87,36 +84,37 @@ public class MaxCycleMST {
 //                    ciclo.pop();
 //                }
 //                this.count = 0;
-        }
-
-        public boolean hasCycle(){
-            return this.hasCycle;
-        }
-
-    public Stack<UndirectedEdge> getCycle(){
-        Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
-        boolean end = false;
-        cycle.push(ciclo.pop());
-        while(!end) {
-            UndirectedEdge edge = ciclo.pop();
-            if(edge.v1() == start|| edge.v2() == start) {
-                end = true;
             }
-            cycle.push(edge);
-        }
-        return cycle;
-    }
+
+            public boolean hasCycle(){
+                return this.hasCycle;
+            }
+
+            public Stack<UndirectedEdge> getCycle(){
+                Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
+                boolean end = false;
+                cycle.push(ciclo.pop());
+                while(!end) {
+                    UndirectedEdge edge = ciclo.pop();
+                    if(edge.v1() == start|| edge.v2() == start) end = true;
+                    cycle.push(edge);
+                }
+                return cycle;
+            }
+
 
 
     public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
             UndirectedEdge maxWeight = null;
-            float f = 0;
+            float f = Float.NEGATIVE_INFINITY;
             MaxCycleMST cycle = new MaxCycleMST(g);
             cycle.search();
-            for (UndirectedEdge edge : cycle.getCycle()) {
-                if (edge.weight() > f) {
-                    f = edge.weight();
-                    maxWeight = edge;
+            if (cycle.hasCycle) {
+                for (UndirectedEdge edge : cycle.getCycle()) {
+                    if (edge.weight() > f) {
+                        f = edge.weight();
+                        maxWeight = edge;
+                    }
                 }
             }
             return maxWeight;
