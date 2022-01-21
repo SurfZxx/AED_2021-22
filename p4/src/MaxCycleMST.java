@@ -9,9 +9,9 @@ public class MaxCycleMST {
         private UndirectedWeightedGraph graph;
         private boolean hasCycle;
         //private int count;
-        private Stack<UndirectedEdge> ciclo = new Stack<>();
+        private Stack<UndirectedEdge> ciclo;// = new Stack<UndirectedEdge>();
         //private Stack<Integer> ciclo = new Stack<>();
-        private int maxWeight;
+        //private int maxWeight;
         private int start;
         private UndirectedWeightedGraph g = null;
         private UndirectedWeightedGraph mst = null;
@@ -39,9 +39,6 @@ public class MaxCycleMST {
                 //start a new search for each vertex that has not been visited yet
                 if(!this.visited[i]) {
                     visit(i,i);
-                } else if(this.visited[i]){
-                    hasCycle = true;
-                    return;
                 }
                 if(this.hasCycle) return;
             }
@@ -157,6 +154,21 @@ public class MaxCycleMST {
         g.addEdge(new UndirectedEdge(3, 5, 30));
         g.addEdge(new UndirectedEdge(5, 10, 25));
         g.addEdge(new UndirectedEdge(2, 3, 20));
+//        UndirectedWeightedGraph g = new  UndirectedWeightedGraph(8);
+//
+//        g.addEdge(new UndirectedEdge(0,1,3));
+//        g.addEdge(new UndirectedEdge(0,2,1));
+//        g.addEdge(new UndirectedEdge(0,3,4));
+//        g.addEdge(new UndirectedEdge(1,3,2));
+//        g.addEdge(new UndirectedEdge(2,3,6));
+//        g.addEdge(new UndirectedEdge(2,4,1));
+//        g.addEdge(new UndirectedEdge(2,5,3));
+//        g.addEdge(new UndirectedEdge(3,6,1));
+//        g.addEdge(new UndirectedEdge(3,4,2));
+//        g.addEdge(new UndirectedEdge(4,5,3));
+//        g.addEdge(new UndirectedEdge(6,5,1));
+//        g.addEdge(new UndirectedEdge(6,7,7));
+//        g.addEdge(new UndirectedEdge(5,7,10));
         MaxCycleMST mst = new MaxCycleMST(g);
         System.out.print(mst.buildMST().toString());
     }
