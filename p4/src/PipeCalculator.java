@@ -1,9 +1,6 @@
-//package aed.graphs;
+package aed.graphs;
 
 import java.util.Stack;
-
-import aed.graphs.UndirectedEdge;
-import aed.graphs.UndirectedWeightedGraph;
 
     public class PipeCalculator {
 
@@ -145,7 +142,7 @@ import aed.graphs.UndirectedWeightedGraph;
             this.casas = n;
             this.well = well;
             this.costs = costs;
-            this.mst = new UndirectedWeightedGraph(n);
+            this.mst = new UndirectedWeightedGraph(n+1);
             this.visited = new boolean[n+1];
             this.hasCycle = false;
             this.ciclo = new Stack<UndirectedEdge>();
@@ -153,7 +150,7 @@ import aed.graphs.UndirectedWeightedGraph;
 
             for(int i = 0; i < n; i++) {
                 mst.addEdge(new UndirectedEdge(i, n, well[i]));
-                for(int j = i; j < n; j++) {
+                for(int j = i +1; j < n; j++) {
                     mst.addEdge(new UndirectedEdge(i, j, costs[i][j]));
                 }
             }
@@ -164,6 +161,7 @@ import aed.graphs.UndirectedWeightedGraph;
             createGraph(casas, well, costs);
             mst = g;
             MaxCycleMST cycle = new MaxCycleMST(mst);
+            cycle.search();
             while(cycle.hasCycle) {
                 cycle.buildMST();
             }
@@ -173,6 +171,7 @@ import aed.graphs.UndirectedWeightedGraph;
         public UndirectedWeightedGraph calculateSolution() {
             createGraph(casas, well, costs);
             MaxCycleMST cycle = new MaxCycleMST(mst);
+            cycle.search();
             while(cycle.hasCycle) {
                 cycle.buildMST();
             }
