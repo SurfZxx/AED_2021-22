@@ -1,6 +1,9 @@
-//package aed.graphs;
+package aed.graphs;
 
 import java.util.Stack;
+
+import aed.graphs.UndirectedEdge;
+import aed.graphs.UndirectedWeightedGraph;
 
     public class PipeCalculator {
 
@@ -17,17 +20,23 @@ import java.util.Stack;
         private boolean hasCycle;
         private Stack<UndirectedEdge> ciclo;
         private int start;
+        UndirectedEdge maxWeight;
         private UndirectedWeightedGraph g = null;
         private UndirectedWeightedGraph mst = null;
 
 
         public PipeCalculator(int n, float[] well, float[][] costs) {
             this.casas = n;
-
+            this.well = well;
+            this.costs = costs;
+            this.visited = new boolean[n + 1];
+            this.hasCycle = false;
+            this.ciclo = new Stack<UndirectedEdge>();
+            this.maxWeight = null;
         }
 
-        public void search() {
-            int vertices = this.graph.vCount();
+        public void search(UndirectedWeightedGraph g) {
+            int vertices = graph.vCount();
             this.hasCycle = false;
             //initialize array to false
             for(int i = 0; i < vertices; i++) {
@@ -85,15 +94,43 @@ import java.util.Stack;
         }
 
         public UndirectedWeightedGraph createGraph(int n, float[] well, float[][] costs) {
+            this.casas = n;
+            this.well = well;
+            this.costs = costs;
+            this.mst = new UndirectedWeightedGraph(n);
+            this.visited = new boolean[n+1];
+            this.hasCycle = false;
+            this.ciclo = new Stack<UndirectedEdge>();
+            this.maxWeight = null;
 
+            for(int i = 0; i < n; i++) {
+                mst.addEdge(new UndirectedEdge(i, n, well[i]));
+                for(int j = i; j < n; j++) {
+                    mst.addEdge(new UndirectedEdge(i, j, costs[i][j]));
+                }
+            }
+            return mst;
         }
 
         public UndirectedWeightedGraph calculateSolution(UndirectedWeightedGraph g) {
-
+            createGraph(casas, well, costs);
+            mst = g;
+            search(mst);
+            while(this.hasCycle) {
+                mst.removeEdge(maxWeight);
+                search(mst);
+            }
+            return mst;
         }
 
         public UndirectedWeightedGraph calculateSolution() {
-
+            createGraph(casas, well, costs);
+            search(mst);
+            while(this.hasCycle) {
+                mst.removeEdge(maxWeight);
+                search(mst);
+            }
+            return mst;
         }
 
         public UndirectedWeightedGraph getMST() {
@@ -102,6 +139,20 @@ import java.util.Stack;
 
 
         public static void main(String[] args) {
-
+            float well[] = {2, 5, 7, 9, 4};
+            float costs[][] = new float[5][5];
+            for(int i = 0; i < 5; i++) {
+                for(int j = 0; j < 5; j++) {
+                    costs[i][j] = 0;
+                }
+            }
+            costs[0][1] = 10;
+            costs[1][3] = 6;
+            costs[1][2] = 4;
+            costs[2][3] = 20;
+            costs[3][4] = 12;
+            PipeCalculator pc = new PipeCalculator(5, well, costs);
+            pc.createGraph(5, well, costs);
+            System.out.println(pc.calculateSolution());
         }
     }
