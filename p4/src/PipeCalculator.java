@@ -1,4 +1,4 @@
-package aed.graphs;
+//package aed.graphs;
 
 import java.util.Stack;
 
@@ -35,62 +35,110 @@ import aed.graphs.UndirectedWeightedGraph;
             this.maxWeight = null;
         }
 
-        public void search(UndirectedWeightedGraph g) {
-            int vertices = graph.vCount();
-            this.hasCycle = false;
-            //initialize array to false
-            for(int i = 0; i < vertices; i++) {
-                this.visited[i] = false;
-                this.inCurrentPath[i] = false;
-            }
-            for(int i = 0; i < vertices; i++) {
-                //start a new search for each vertex that has not been visited yet
-                if(!this.visited[i]) {
-                    visit(i,i);
-                }
-                if(this.hasCycle) return;
-            }
-        }
+        public class MaxCycleMST {
 
-        private void visit(int from, int v) {//int from, int v,
-            this.inCurrentPath[v] = true;
-            this.visited[v] = true;
-            for (UndirectedEdge adj : graph.adj(v)) {
-                //if a cycle was already detected we do not need to continue
-                if (this.hasCycle) return;
-                else if (!this.visited[adj.other(v)] && adj.other(v) != from) {
-                    ciclo.push(adj);
-                    visit(v, adj.other(v));
-                } else if (adj.other(v) != from) {
-                    start = adj.other(v);
-                    ciclo.push(adj);
-                    this.hasCycle = true;
+            private boolean[] visited;
+            private boolean[] inCurrentPath;
+            private UndirectedWeightedGraph graph;
+            private boolean hasCycle;
+            private Stack<UndirectedEdge> ciclo;
+            private int start;
+            private UndirectedWeightedGraph g = null;
+            private UndirectedWeightedGraph mst = null;
+
+            public MaxCycleMST(UndirectedWeightedGraph g) {
+                this.graph = g;
+                this.g = g;
+                this.visited = new boolean[g.vCount()];
+                this.inCurrentPath = new boolean[g.vCount()];
+                this.ciclo = new Stack<UndirectedEdge>();
+
+            }
+
+            public void search() {
+                int vertices = this.graph.vCount();
+                this.hasCycle = false;
+                //initialize array to false
+                for (int i = 0; i < vertices; i++) {
+                    this.visited[i] = false;
+                    this.inCurrentPath[i] = false;
+                }
+                for (int i = 0; i < vertices; i++) {
+                    //start a new search for each vertex that has not been visited yet
+                    if (!this.visited[i]) {
+                        visit(i, i);
+                    }
+                    if (this.hasCycle) return;
+                }
+            }
+
+            private void visit(int from, int v) {//int from, int v,
+                this.inCurrentPath[v] = true;
+                this.visited[v] = true;
+                for (UndirectedEdge adj : graph.adj(v)) {
+                    //if a cycle was already detected we do not need to continue
+                    if (this.hasCycle) return;
+                    else if (!this.visited[adj.other(v)] && adj.other(v) != from) {
+                        ciclo.push(adj);
+                        visit(v, adj.other(v));
+                    } else if (adj.other(v) != from) {
+                        start = adj.other(v);
+                        ciclo.push(adj);
+                        this.hasCycle = true;
+                        return;
+                    }
+                }
+                if (this.hasCycle) {
                     return;
                 }
+                if (!ciclo.empty()) {
+                    this.ciclo.pop();
+                }
+                this.inCurrentPath[v] = false;
             }
-            if (this.hasCycle) {
-                return;
-            }
-            if (!ciclo.empty()) {
-                this.ciclo.pop();
-            }
-            this.inCurrentPath[v] = false;
-        }
 
-        public boolean hasCycle() {
-            return this.hasCycle;
-        }
-
-        public Stack<UndirectedEdge> getCycle() {
-            Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
-            boolean end = false;
-            cycle.push(ciclo.pop());
-            while(!end) {
-                UndirectedEdge edge = ciclo.pop();
-                if(edge.v1() == start|| edge.v2() == start) end = true;
-                cycle.push(edge);
+            public boolean hasCycle() {
+                return this.hasCycle;
             }
-            return cycle;
+
+            public Stack<UndirectedEdge> getCycle() {
+                Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
+                boolean end = false;
+                cycle.push(ciclo.pop());
+                while (!end) {
+                    UndirectedEdge edge = ciclo.pop();
+                    if (edge.v1() == start || edge.v2() == start) end = true;
+                    cycle.push(edge);
+                }
+                return cycle;
+            }
+
+
+            public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
+                UndirectedEdge maxWeight = null;
+                float f = Float.NEGATIVE_INFINITY;
+                MaxCycleMST cycle = new MaxCycleMST(g);
+                cycle.search();
+                if (cycle.hasCycle) {
+                    for (UndirectedEdge edge : cycle.getCycle()) {
+                        if (edge.weight() > f) {
+                            f = edge.weight();
+                            maxWeight = edge;
+                        }
+                    }
+                }
+                return maxWeight;
+            }
+
+            public UndirectedWeightedGraph buildMST() {
+                UndirectedWeightedGraph copy = g.shallowCopy();
+                for (int i = 0; i < g.eCount() - g.vCount() + 1; i++) {
+                    UndirectedEdge maxWeight = determineMaxInCycle(copy);
+                    copy.removeEdge(maxWeight);
+                }
+                this.mst = copy;
+                return copy;
+            }
         }
 
         public UndirectedWeightedGraph createGraph(int n, float[] well, float[][] costs) {
@@ -115,20 +163,18 @@ import aed.graphs.UndirectedWeightedGraph;
         public UndirectedWeightedGraph calculateSolution(UndirectedWeightedGraph g) {
             createGraph(casas, well, costs);
             mst = g;
-            search(mst);
-            while(this.hasCycle) {
-                mst.removeEdge(maxWeight);
-                search(mst);
+            MaxCycleMST cycle = new MaxCycleMST(mst);
+            while(cycle.hasCycle) {
+                cycle.buildMST();
             }
             return mst;
         }
 
         public UndirectedWeightedGraph calculateSolution() {
             createGraph(casas, well, costs);
-            search(mst);
-            while(this.hasCycle) {
-                mst.removeEdge(maxWeight);
-                search(mst);
+            MaxCycleMST cycle = new MaxCycleMST(mst);
+            while(cycle.hasCycle) {
+                cycle.buildMST();
             }
             return mst;
         }
