@@ -1,4 +1,4 @@
-package aed.graphs;
+//package aed.graphs;
 
 import java.util.Stack;
 
@@ -140,8 +140,8 @@ import java.util.Stack;
 
         public UndirectedWeightedGraph createGraph(int n, float[] well, float[][] costs) {
             this.casas = n;
-            this.well = well;
-            this.costs = costs;
+            this.well = well;//preço construir poço na casa
+            this.costs = costs;//preço de canalizaçao de uma casa para outra
             this.mst = new UndirectedWeightedGraph(n+1);
             this.visited = new boolean[n+1];
             this.hasCycle = false;

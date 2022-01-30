@@ -50,7 +50,7 @@ public class MaxCycleMST {
                 for (UndirectedEdge adj : graph.adj(v)) {
                     //if a cycle was already detected we do not need to continue
                     if (this.hasCycle) return;
-                    else if (!this.visited[adj.other(v)] && adj.other(v) != from) {
+                    else if (!this.visited[adj.other(v)] && adj.other(v) != from) {//procurar pontos novos
                         ciclo.push(adj);
                         visit(v, adj.other(v));
                     } else if (adj.other(v) != from) {
@@ -93,7 +93,7 @@ public class MaxCycleMST {
             public Stack<UndirectedEdge> getCycle(){
                 Stack<UndirectedEdge> cycle = new Stack<UndirectedEdge>();
                 boolean end = false;
-                cycle.push(ciclo.pop());
+                cycle.push(ciclo.pop());//retira de ciclo e coloca em cycle
                 while(!end) {
                     UndirectedEdge edge = ciclo.pop();
                     if(edge.v1() == start|| edge.v2() == start) end = true;
@@ -101,7 +101,6 @@ public class MaxCycleMST {
                 }
                 return cycle;
             }
-
 
 
     public UndirectedEdge determineMaxInCycle(UndirectedWeightedGraph g) {
